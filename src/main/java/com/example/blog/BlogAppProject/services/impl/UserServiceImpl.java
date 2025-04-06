@@ -6,9 +6,12 @@ import com.example.blog.BlogAppProject.payloads.UserDto;
 import com.example.blog.BlogAppProject.repositories.UserRepo;
 import com.example.blog.BlogAppProject.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -39,17 +42,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer userId) {
+        User user = userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId));
 
+        userRepo.delete(user);
     }
 
     @Override
     public UserDto getUserById(Integer userId) {
-        return null;
+        User user = userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId));
+
+        return userToDto(user);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        return List.of();
+        List<User> users = userRepo.findAll();
+        List<UserDto> userDtos = new ArrayList<>();
+
+        for (User user : users) {
+            UserDto userDto = userToDto(user);
+            userDtos.add(userDto);
+        }
+
+        return userDtos;
     }
 
     //DTO to User:
