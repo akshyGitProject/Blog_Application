@@ -5,6 +5,7 @@ import com.example.blog.BlogAppProject.exceptions.ResourceNotFoundException;
 import com.example.blog.BlogAppProject.payloads.UserDto;
 import com.example.blog.BlogAppProject.repositories.UserRepo;
 import com.example.blog.BlogAppProject.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private UserRepo userRepo;
@@ -69,12 +73,12 @@ public class UserServiceImpl implements UserService {
 
     //DTO to User:
     private User dtoToUser(UserDto userDto){
-        User user = new User();
-        user.setId(userDto.getId());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setName(userDto.getName());
-        user.setAbout(userDto.getAbout());
+        User user = this.modelMapper.map(userDto, User.class);
+//        user.setId(userDto.getId());
+//        user.setEmail(userDto.getEmail());
+//        user.setPassword(userDto.getPassword());
+//        user.setName(userDto.getName());
+//        user.setAbout(userDto.getAbout());
 
         return user;
     }
@@ -82,13 +86,14 @@ public class UserServiceImpl implements UserService {
     //
     public UserDto userToDto(User user){
 
-        UserDto userDto = new UserDto();
+        UserDto userDto = this.modelMapper.map(user, UserDto.class);
 
-        userDto.setId(user.getId());
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(user.getPassword());
-        userDto.setName(user.getName());
-        userDto.setAbout(user.getAbout());
+
+//        userDto.setId(user.getId());
+//        userDto.setEmail(user.getEmail());
+//        userDto.setPassword(user.getPassword());
+//        userDto.setName(user.getName());
+//        userDto.setAbout(user.getAbout());
 
 
         return userDto;
