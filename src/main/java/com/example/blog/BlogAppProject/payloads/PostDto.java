@@ -1,18 +1,17 @@
 package com.example.blog.BlogAppProject.payloads;
 
 import com.example.blog.BlogAppProject.entities.Category;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostDto {
+    private int postId;
 
     private String title;
     private String content;
