@@ -5,12 +5,16 @@ import com.example.blog.BlogAppProject.entities.Post;
 import com.example.blog.BlogAppProject.entities.User;
 import com.example.blog.BlogAppProject.exceptions.ResourceNotFoundException;
 import com.example.blog.BlogAppProject.payloads.PostDto;
+import com.example.blog.BlogAppProject.payloads.PostResponse;
 import com.example.blog.BlogAppProject.repositories.CategoryRepo;
 import com.example.blog.BlogAppProject.repositories.PostRepo;
 import com.example.blog.BlogAppProject.repositories.UserRepo;
 import com.example.blog.BlogAppProject.services.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -80,16 +84,39 @@ public class PostServiceImpl implements PostService {
         return null;
     }
 
-    @Override
-    public List<PostDto> getAllPosts() {
+//    @Override
+//    public List<PostDto> getAllPosts() {
+//
+//        List<Post> posts=this.postRepo.findAll();
+//
+//        List<PostDto> postDtos = posts.stream()
+//                .map(post -> this.modelMapper.map(post, PostDto.class))  // Corrected line
+//                .collect(Collectors.toList());
+//
+//        return postDtos;
+//    }
+@Override
+public PostResponse getAllPosts(int pageNumber, int pageSize) {
 
-        List<Post> posts=this.postRepo.findAll();
-        List<PostDto> postDtos = posts.stream()
-                .map(post -> this.modelMapper.map(post, PostDto.class))  // Corrected line
-                .collect(Collectors.toList());
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    Page<Post> pagePosts = this.postRepo.findAll(pageable);
 
-        return postDtos;
-    }
+    List<Post> posts = pagePosts.getContent();
+
+    List<PostDto> postDtos = posts.stream()
+            .map(post -> this.modelMapper.map(post, PostDto.class))
+            .collect(Collectors.toList());
+
+    PostResponse postResponse=new PostResponse();
+    postResponse.setContent(postDtos);
+    postResponse.setPageNumber(pagePosts.getNumber());
+    postResponse.setPageSize(pagePosts.getSize());
+    postResponse.setTotalElements(pagePosts.getTotalElements());
+    postResponse.setTotalPages(pagePosts.getTotalPages());
+    postResponse.setLastpage(pagePosts.isLast());
+
+    return postResponse;
+}
 
     @Override
     public PostDto getPostBYId(Integer postId) {
