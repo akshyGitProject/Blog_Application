@@ -13,4 +13,5 @@ public interface PostRepo extends JpaRepository<Post,Integer> {
     //List<Category> findAllCategories();
    List<Post> findByCategory(Category categoryId);
    List<Post> findByUser(User userId);
+   List<Post> findByTitleContaining(String title);   // Search posts by partial title match
 }

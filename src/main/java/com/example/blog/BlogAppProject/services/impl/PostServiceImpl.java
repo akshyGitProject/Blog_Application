@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -96,9 +97,18 @@ public class PostServiceImpl implements PostService {
 //        return postDtos;
 //    }
 @Override
-public PostResponse getAllPosts(int pageNumber, int pageSize) {
+public PostResponse getAllPosts(int pageNumber,int pageSize, String sortBy,String sortDir) {
 
-    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Sort sort=null;
+
+        if(sortDir.equalsIgnoreCase("asc")){
+            sort=Sort.by(sortBy).ascending();
+        }
+        else {
+            sort=Sort.by(sortBy).descending();
+        }
+
+    Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
     Page<Post> pagePosts = this.postRepo.findAll(pageable);
 
     List<Post> posts = pagePosts.getContent();
@@ -157,8 +167,15 @@ public PostResponse getAllPosts(int pageNumber, int pageSize) {
     }
 
     @Override
-    public List<Post> searchPostByKeyword(String keyword) {
-        return List.of();
+    public List<PostDto> searchPosts(String keyword) {
+        List<Post> posts = postRepo.findByTitleContaining(keyword);
+
+        //Converting Post to PostDto
+        List<PostDto> postDtos = posts.stream()
+                .map(post -> this.modelMapper.map(post, PostDto.class))  // Corrected line
+                .collect(Collectors.toList());
+
+        return postDtos;
     }
 
 
