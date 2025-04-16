@@ -99,5 +99,17 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
+    public UserDto toDto(User user){
+
+        UserDto userDto=new UserDto();
+        userDto.setId(user.getId());
+        userDto.setPassword(user.getPassword());
+        userDto.setName(user.getName());
+        userDto.setAbout(user.getAbout());
+        userDto.setEmail(user.getEmail());
+
+        return userDto;
+
+    }
 }
 

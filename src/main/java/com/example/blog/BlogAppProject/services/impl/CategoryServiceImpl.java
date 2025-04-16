@@ -41,11 +41,6 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto deleteCategory(Integer categoryId) {
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
 
-        // Assuming there's a related user update operation
-        // Implement logic to associate deletion of the category and update user here.
-        // Example (requires context and userRepo):
-        // userRepo.updateUserCategoryToDefault(categoryId);
-
         categoryRepo.delete(category);
 
         return categoryToCategoryDto(category);
@@ -87,5 +82,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
+    public CategoryDto toDto(Category category){
+
+        CategoryDto categoryDto=new CategoryDto();
+        categoryDto.setCategoryId(category.getCategoryId());
+        categoryDto.setCategoryDescription(category.getCategoryDescription());
+        categoryDto.setCategoryTitle(category.getCategoryTitle());
+
+        return categoryDto;
+    }
 
 }
