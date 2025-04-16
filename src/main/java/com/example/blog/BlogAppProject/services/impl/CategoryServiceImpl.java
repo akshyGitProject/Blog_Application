@@ -14,8 +14,8 @@ import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
-    private ModelMapper modelMapper;
+//    @Autowired
+//    private ModelMapper modelMapper;
 
     @Autowired
     private CategoryRepo categoryRepo;
@@ -25,14 +25,14 @@ public class CategoryServiceImpl implements CategoryService {
 
         List<Category> categories = categoryRepo.findAll();
         return categories.stream()
-                .map(this::categoryToCategoryDto)
+                .map(this::toDto)
                 .toList();
     }
 
     @Override
     public CategoryDto getCategoryById(Integer categoryId) {
         Category category = categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
-        CategoryDto categoryDto = categoryToCategoryDto(category);
+        CategoryDto categoryDto = toDto(category);
 
         return categoryDto;
     }
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepo.delete(category);
 
-        return categoryToCategoryDto(category);
+        return toDto(category);
     }
 
     @Override
@@ -57,39 +57,55 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category updatedCategory = categoryRepo.save(category);
 
-        return categoryToCategoryDto(updatedCategory);
+        return toDto(updatedCategory);
     }
 
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
-        Category category = categoryDtoToCategory(categoryDto);
-        categoryRepo.save(category);
-        return categoryToCategoryDto(category);
+        Category category = new Category();
+        category.setCategoryTitle(categoryDto.getCategoryTitle());
+        category.setCategoryDescription(categoryDto.getCategoryDescription());
+
+        Category savedCategory = categoryRepo.save(category);
+
+        CategoryDto responseDto = new CategoryDto();
+        responseDto.setCategoryId(savedCategory.getCategoryId());
+        responseDto.setCategoryTitle(savedCategory.getCategoryTitle());
+        responseDto.setCategoryDescription(savedCategory.getCategoryDescription());
+
+        return responseDto;
     }
 
-    public Category categoryDtoToCategory(CategoryDto categoryDto){
+//    public Category categoryDtoToCategory(CategoryDto categoryDto){
+//
+//        Category category = modelMapper.map(categoryDto, Category.class);
+//        return category;
+//
+//    }
 
-        Category category = modelMapper.map(categoryDto, Category.class);
-        return category;
+//    public CategoryDto categoryToCategoryDto(Category category){
+//
+//        CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
+//
+//        return categoryDto;
+//
+//    }
 
-    }
-
-    public CategoryDto categoryToCategoryDto(Category category){
-
-        CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
-
-        return categoryDto;
-
-    }
-
-    public CategoryDto toDto(Category category){
-
-        CategoryDto categoryDto=new CategoryDto();
+    // Manual mapper: Entity -> DTO
+    private CategoryDto toDto(Category category) {
+        CategoryDto categoryDto = new CategoryDto();
         categoryDto.setCategoryId(category.getCategoryId());
-        categoryDto.setCategoryDescription(category.getCategoryDescription());
         categoryDto.setCategoryTitle(category.getCategoryTitle());
-
+        categoryDto.setCategoryDescription(category.getCategoryDescription());
         return categoryDto;
     }
 
+    // Manual mapper: DTO -> Entity
+    private Category toEntity(CategoryDto categoryDto) {
+        Category category = new Category();
+        category.setCategoryId(categoryDto.getCategoryId());
+        category.setCategoryTitle(categoryDto.getCategoryTitle());
+        category.setCategoryDescription(categoryDto.getCategoryDescription());
+        return category;
+    }
 }

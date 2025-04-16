@@ -166,7 +166,7 @@ public PostResponse getAllPosts(int pageNumber,int pageSize, String sortBy,Strin
         return posts.stream().map(this::toDto).collect(Collectors.toList());
     }
 
-    private PostDto toDto(Post post) {
+    PostDto toDto(Post post) {
         PostDto postDto = new PostDto();
         postDto.setPostId(post.getPostId());
         postDto.setTitle(post.getTitle());

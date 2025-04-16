@@ -42,6 +42,8 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = toEntity(commentDto);
         comment.setPost(post);
+        comment.setCommentId(comment.getCommentId());
+
 
         Comment savedComment = commentRepo.save(comment);
 
@@ -76,7 +78,7 @@ public class CommentServiceImpl implements CommentService {
         CommentDto dto = new CommentDto();
         dto.setCommentId(comment.getCommentId());
         dto.setContent(comment.getContent());
-        //dto.setPostDto(postServiceImpl.toDto(comment.getPost()));
+        dto.setPostDto(postServiceImpl.toDto(comment.getPost()));
         return dto;
     }
 

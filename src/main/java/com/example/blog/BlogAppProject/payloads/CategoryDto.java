@@ -20,4 +20,5 @@ public class CategoryDto {
     @NotEmpty
     @Size(min = 10,max=1000,message = "About must be between 10 and 1000 characters long")
     private String categoryDescription;
+
 }

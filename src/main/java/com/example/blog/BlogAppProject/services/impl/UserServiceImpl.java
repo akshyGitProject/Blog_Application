@@ -15,8 +15,8 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private ModelMapper modelMapper;
+//    @Autowired
+//    private ModelMapper modelMapper;
 
     @Autowired
     private UserRepo userRepo;
@@ -71,45 +71,25 @@ public class UserServiceImpl implements UserService {
         return userDtos;
     }
 
-    //DTO to User:
-    private User dtoToUser(UserDto userDto){
-        User user = this.modelMapper.map(userDto, User.class);
-//        user.setId(userDto.getId());
-//        user.setEmail(userDto.getEmail());
-//        user.setPassword(userDto.getPassword());
-//        user.setName(userDto.getName());
-//        user.setAbout(userDto.getAbout());
 
-        return user;
-    }
-
-    //
     public UserDto userToDto(User user){
-
-        UserDto userDto = this.modelMapper.map(user, UserDto.class);
-
-
-//        userDto.setId(user.getId());
-//        userDto.setEmail(user.getEmail());
-//        userDto.setPassword(user.getPassword());
-//        userDto.setName(user.getName());
-//        userDto.setAbout(user.getAbout());
-
-
-        return userDto;
-    }
-
-    public UserDto toDto(User user){
-
-        UserDto userDto=new UserDto();
+        UserDto userDto = new UserDto();
         userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setName(user.getName());
         userDto.setAbout(user.getAbout());
-        userDto.setEmail(user.getEmail());
-
         return userDto;
+    }
 
+    private User dtoToUser(UserDto userDto){
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setName(userDto.getName());
+        user.setAbout(userDto.getAbout());
+        return user;
     }
 }
 
